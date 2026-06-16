@@ -20,9 +20,17 @@ Invoke and mention `nestjs-expert` before backend service work if available.
 | 2.5.2 | Add per-service `/health/ready` | Dependency-aware endpoint | Planned |
 | 2.6.1 | Add JSON logger | Shared package | Planned |
 | 2.6.2 | Propagate correlation ID | Gateway and services | Planned |
+| 2.6.3 | Propagate correlation ID through broker events | Event contracts/logger | Planned |
+| 2.7.1 | Add validation library baseline | Zod or class-validator | Planned |
+| 2.7.2 | Reject or strip unknown request fields | Gateway/services | Planned |
+| 2.8.1 | Enable graceful shutdown hooks | All services | Planned |
+| 2.8.2 | Close DB, Redis, and broker clients on shutdown | All services | Planned |
 
 ## Exit Criteria
 
 - Each service has an independent entry point.
 - Each service can run separately.
 - Each service has health endpoints.
+- Each service logs structured JSON.
+- Each service validates API inputs.
+- Each service shuts down gracefully.

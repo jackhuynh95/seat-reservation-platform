@@ -14,6 +14,9 @@ Capture the assignment and review checklist before implementation.
 | 0.3.1 | Define microservices target | `docs/architecture/architecture-notes.md` | Done |
 | 0.4.1 | Define implementation guardrails | `docs/guardrails/development-guardrails.md` | Done |
 | 0.5.1 | Draft roadmap | `docs/roadmap/IMPLEMENTATION_ROADMAP.md` | Done |
+| 0.6.1 | Capture common best-practice targets | `docs/review/common-best-practices.md` | Done |
+| 0.6.2 | Capture scoring guide | `docs/review/scoring-guide.md` | Done |
+| 0.6.3 | Capture quick scan | `docs/review/quick-scan.md` | Done |
 
 ## Exit Criteria
 

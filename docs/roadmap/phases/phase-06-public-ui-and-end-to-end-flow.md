@@ -19,6 +19,9 @@ Invoke and mention `react-best-practices` before UI work if available.
 | 6.4.1 | Build mock payment action | UI | Planned |
 | 6.5.1 | Show reservation success | UI | Planned |
 | 6.5.2 | Show conflict/failure states | UI | Planned |
+| 6.6.1 | Show retry-friendly 409 state | UI | Planned |
+| 6.6.2 | Show payment failure compensation state | UI | Planned |
+| 6.6.3 | Show session expiry/logout states | UI | Planned |
 
 ## Exit Criteria
 

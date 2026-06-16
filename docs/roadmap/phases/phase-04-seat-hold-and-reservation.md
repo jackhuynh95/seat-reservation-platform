@@ -18,9 +18,17 @@ Implement the seat availability and hold model correctly under concurrency.
 | 4.5.2 | Add hold endpoint | Seat API | Planned |
 | 4.6.1 | Test two concurrent holds where one wins | Integration test | Planned |
 | 4.6.2 | Test duplicate hold by same user | Integration test | Planned |
+| 4.7.1 | Add partial index for active holds | Migration | Planned |
+| 4.7.2 | Return 409 with retry guidance on contention | Seat API | Planned |
+| 4.7.3 | Document locking trade-off | Decision record | Planned |
+| 4.8.1 | Add SSE skeleton or polling decision | API/docs | Planned |
+| 4.8.2 | Add `TODO(prod)` Redis pub/sub note if using simple stream | Code/docs | Planned |
 
 ## Exit Criteria
 
 - Users can see 3 seats.
 - A user can hold a seat.
 - Concurrent hold correctness is proven.
+- Hot-path indexes exist.
+- Conflict responses are client-friendly.
+- Real-time or polling trade-off is explicit.

@@ -17,6 +17,9 @@ Implement secure login and 90-day refresh sessions.
 | 3.5.1 | Logout current session | Auth API | Planned |
 | 3.5.2 | Logout all sessions | Auth API | Planned |
 | 3.6.1 | Add auth security tests | Tests | Planned |
+| 3.7.1 | Add Redis-backed login rate limit | Gateway/auth | Planned |
+| 3.7.2 | Add sensitive action audit logs | Auth service | Planned |
+| 3.7.3 | Add timing equalization for login | Auth service or documented shortcut | Planned |
 
 ## Exit Criteria
 
@@ -24,3 +27,5 @@ Implement secure login and 90-day refresh sessions.
 - Refresh session expires at 90 days.
 - Refresh token is not exposed to JavaScript.
 - Security auto-fail items are avoided.
+- Login is rate-limited.
+- Sensitive auth actions are auditable.

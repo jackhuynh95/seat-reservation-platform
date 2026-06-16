@@ -23,6 +23,9 @@ Implement mock payment completion and event-driven reservation.
 | 5.7.2 | Add retry/dead-letter path | Consumer/broker config or documented shortcut | Planned |
 | 5.7.3 | Test duplicate payment event | Integration test | Planned |
 | 5.7.4 | Test payment failure compensation | Integration test | Planned |
+| 5.8.1 | Add webhook inbox | Payment service | Planned |
+| 5.8.2 | Add transactional outbox or scoped decision | Payment service/docs | Planned |
+| 5.8.3 | Add ack-fast webhook flow or scoped decision | Payment service/docs | Planned |
 
 ## Exit Criteria
 
@@ -31,3 +34,4 @@ Implement mock payment completion and event-driven reservation.
 - Payment timeout or abandonment releases the hold.
 - Duplicate webhook events are safe.
 - Saga/compensation behavior is documented and tested.
+- Inbox/outbox trade-off is implemented or explicitly documented.

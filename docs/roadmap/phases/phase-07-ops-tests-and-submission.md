@@ -15,12 +15,16 @@ Package and verify the submission.
 | 7.3.1 | Add per-service Dockerfiles | Dockerfiles | Planned |
 | 7.4.1 | Add full Compose runtime | Compose config | Planned |
 | 7.5.1 | Add reviewer local runbook | Docs | Planned |
-| 7.6.1 | Capture evidence screenshots/logs | Evidence docs | Planned |
-| 7.6.2 | Final README pass | README | Planned |
+| 7.6.1 | Add metrics endpoint or documented scope cut | Services/docs | Planned |
+| 7.6.2 | Add production TODO pass | Code/docs | Planned |
+| 7.6.3 | Verify non-root Dockerfiles | Dockerfiles | Planned |
+| 7.7.1 | Capture evidence screenshots/logs | Evidence docs | Planned |
+| 7.7.2 | Final README pass | README | Planned |
 
 ## Exit Criteria
 
 - Full flow runs locally.
 - Tests pass.
 - Reviewer can follow setup docs.
+- Ops readiness evidence exists.
 - Submission zip can be prepared.
