@@ -2,6 +2,8 @@
 
 TypeScript seat reservation platform with authentication, 90-day sessions, seat selection, mock payment flow, and reservation completion after payment.
 
+![alt text](SYSTEM_DIAGRAM.png)
+
 ## Status
 
 Runnable TypeScript microservices implementation for the technical assessment.
