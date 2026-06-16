@@ -6,7 +6,7 @@ Reviewer-facing evidence for the local Docker run of `seat-reservation-platform`
 
 | Date | Tester | Environment | Summary |
 | --- | --- | --- | --- |
-| 2026-06-16 | Codex | Local Docker runtime, web at `http://localhost:5173`, gateway at `http://localhost:3000` | Captured runtime, architecture, login/session, 3-seat availability, hold, mock payment, reservation completion, and reserved-seat conflict evidence. |
+| 2026-06-16 | Codex | Local Docker runtime, web at `http://localhost:5173`, gateway at `http://localhost:3000` | Captured runtime, architecture, login/session, 3-seat availability, hold, mock payment, webhook HMAC/idempotency, reservation completion, and reserved-seat conflict evidence. |
 
 ## Functional Requirement Evidence
 
@@ -20,6 +20,7 @@ Reviewer-facing evidence for the local Docker run of `seat-reservation-platform`
 | 6 | Mock payment initiation | UI after `Create Payment` | Payment intent is created for held seat | [screenshots/2026-06-16-06-payment-initiation.png](screenshots/2026-06-16-06-payment-initiation.png) | Pass |
 | 7 | Payment completion and reservation | UI after `Mock Pay` and worker processing | Payment completion queues event; Seat Service shows `A3` as `reserved` | [screenshots/2026-06-16-07-payment-completion-reserved.png](screenshots/2026-06-16-07-payment-completion-reserved.png) | Pass |
 | 8 | Reserved-seat conflict | Gateway response after attempting to hold already-reserved `A1` | API rejects second hold with HTTP `409` and `Seat is not available` | [screenshots/2026-06-16-08-conflict-or-compensation.png](screenshots/2026-06-16-08-conflict-or-compensation.png) | Pass |
+| 9 | Webhook HMAC and idempotency | Signed provider payload posted to `POST /webhooks/mock-payment`, then replayed | First signed webhook returns HTTP `202` with `duplicate:false`; replay returns HTTP `202` with `duplicate:true` | [screenshots/2026-06-16-09-webhook-hmac-idempotency.png](screenshots/2026-06-16-09-webhook-hmac-idempotency.png) | Pass |
 
 ## Runtime Proof
 
@@ -66,3 +67,13 @@ http://localhost:3004/health/ready {"ok":true}
 7. Waited for RabbitMQ/Payment Worker flow to update Seat Service.
 8. Verified `A3` became `reserved`.
 9. Attempted to hold reserved `A1`; Gateway returned HTTP `409`.
+
+## Webhook Proof
+
+The browser happy path uses the local `mock-complete` shortcut for reviewer speed. Separate webhook evidence proves the production-style provider boundary:
+
+1. Payment Service generated a signed provider payload for an existing payment intent.
+2. The payload was posted to `POST http://localhost:3003/webhooks/mock-payment` with `x-payment-timestamp` and `x-payment-signature`.
+3. Payment Service accepted the signed webhook with HTTP `202` and `duplicate:false`.
+4. The exact same signed payload was replayed.
+5. Payment Service accepted the replay safely with HTTP `202` and `duplicate:true`.
