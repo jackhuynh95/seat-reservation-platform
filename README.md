@@ -84,4 +84,5 @@ Payment failure publishes `payment.failed.v1` and releases the hold.
 - [Epic Vision](docs/roadmap/EPIC.md)
 - [Docker Compose Notes](docs/operations/docker-compose.md)
 - [Reviewer Runbook](docs/operations/reviewer-runbook.md)
+- [Manual Test Evidence](docs/evidence/manual-test-evidence.md)
 - [Decisions](docs/decisions/README.md)
