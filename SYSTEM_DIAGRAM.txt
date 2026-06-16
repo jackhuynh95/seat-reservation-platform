@@ -1,0 +1,85 @@
+Seat Reservation Platform - Microservices System Diagram
+
++------------------+
+|      Browser     |
+|  React Web UI    |
+|  localhost:5173  |
++--------+---------+
+         |
+         | HTTP
+         v
++------------------+
+|     Gateway      |
+|  localhost:3000  |
+|------------------|
+| CORS allowlist   |
+| Security headers |
+| Rate limiting    |
+| Correlation ID   |
+| JWT check        |
++---+----------+---+
+    |          |
+    |          |
+    v          v
++-----------+  +--------------+
+|   Auth    |  | Seat Service |
+|  :3001    |  |    :3002     |
+|-----------|  |--------------|
+| Login     |  | List seats   |
+| Refresh   |  | Hold seat    |
+| Logout    |  | Reserve seat |
+| Sessions  |  | Release hold |
++-----+-----+  +------+-------+
+      |               |
+      |               |
+      v               v
++-----------------------------+
+|          PostgreSQL         |
+|-----------------------------|
+| auth_users                  |
+| auth_refresh_sessions       |
+| seats                       |
+| seat_holds                  |
+| seat_reservations           |
+| payment_intents             |
+| webhook/event idempotency   |
++-----------------------------+
+
+Payment flow:
+
++---------+        +-----------------+
+| Gateway |------->| Payment Service |
+|  :3000  |        |      :3003      |
++---------+        |-----------------|
+                   | Create intent   |
+                   | Mock pay        |
+                   | Verify webhook  |
+                   | Publish event   |
+                   +--------+--------+
+                            |
+                            | payment.completed.v1
+                            | payment.failed.v1
+                            v
+                   +-----------------+
+                   |    RabbitMQ     |
+                   |      :5672      |
+                   +--------+--------+
+                            |
+                            | consume
+                            v
+                   +-----------------+
+                   | Payment Worker  |
+                   |      :3004      |
+                   +--------+--------+
+                            |
+                            | internal apply event
+                            v
+                   +-----------------+
+                   | Seat Service    |
+                   | Reserve/release |
+                   +-----------------+
+
+Rule:
+- User actions go through Gateway.
+- Payment result goes through RabbitMQ.
+- Seat Service owns final seat state.
