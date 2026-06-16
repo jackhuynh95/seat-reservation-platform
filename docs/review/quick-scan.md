@@ -177,13 +177,13 @@ Record final scan notes here before submission:
 
 | Area | Result | Notes |
 | --- | --- | --- |
-| Microservices layout | TODO | TODO |
-| Broker | TODO | TODO |
-| Refresh token safety | TODO | TODO |
-| Password hashing | TODO | TODO |
-| Secret fallback | TODO | TODO |
-| Concurrency invariant | TODO | TODO |
-| Webhook HMAC | TODO | TODO |
-| Health/shutdown | TODO | TODO |
-| Compensation | TODO | TODO |
-| Production awareness | TODO | TODO |
+| Microservices layout | Pass | `apps/gateway`, `apps/auth-service`, `apps/seat-service`, `apps/payment-service`, `apps/payment-worker`, `apps/web` |
+| Broker | Pass | RabbitMQ in Compose; payment service publishes `payment.*.v1`; worker consumes |
+| Refresh token safety | Pass | Refresh token only in httpOnly cookie; no JSON/localStorage |
+| Password hashing | Pass | Argon2id for passwords and refresh-token hashes |
+| Secret fallback | Pass | `requiredEnv` fails fast for secrets; no code fallback |
+| Concurrency invariant | Pass | `for update`, serializable hold transaction, partial unique indexes |
+| Webhook HMAC | Pass | `createHmac`, `timingSafeEqual`, timestamp freshness |
+| Health/shutdown | Pass | `/health/live`, `/health/ready`, `enableShutdownHooks` per service |
+| Compensation | Pass | `payment.failed.v1` releases hold; expiry sweeper releases abandoned holds |
+| Production awareness | Pass | `TODO(prod/security)`, `TODO(scale)`, and decision follow-ups recorded |

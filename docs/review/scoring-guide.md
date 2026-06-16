@@ -85,13 +85,13 @@ Record final scoring status here before submission:
 
 | Category | Result | Evidence |
 | --- | --- | --- |
-| Auto-fail clear | TODO | TODO |
-| Meet architecture | TODO | TODO |
-| Meet security | TODO | TODO |
-| Meet concurrency | TODO | TODO |
-| Meet ops | TODO | TODO |
-| Meet finance | TODO | TODO |
-| Decisions count | TODO | TODO |
-| Exceed signal 1 | TODO | TODO |
-| Exceed signal 2 | TODO | TODO |
-| Exceed signal 3 | TODO | TODO |
+| Auto-fail clear | Pass | Separate services, RabbitMQ, Argon2id, httpOnly refresh cookie, HMAC webhook |
+| Meet architecture | Pass | Gateway/auth/seat/payment/worker/web are separate Docker runtimes |
+| Meet security | Pass | Refresh rotation, hashed opaque refresh tokens, logout-all, audit logs, CORS allowlist |
+| Meet concurrency | Pass | Seat hold uses transaction, row lock, and partial unique indexes |
+| Meet ops | Pass | Compose runtime, per-service Dockerfiles, health endpoints, shutdown hooks |
+| Meet finance | Pass | Server-controlled amount, HMAC webhook, idempotent webhook, payment failure compensation |
+| Decisions count | Pass | 6 decision records in `docs/decisions/` |
+| Exceed signal 1 | Pass | Locking trade-off decision and `SKIP LOCKED` sweeper |
+| Exceed signal 2 | Pass | Refresh token family reuse detection |
+| Exceed signal 3 | Pass | Webhook inbox/idempotency and documented outbox follow-up |

@@ -1,0 +1,12 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/contracts" },
+    { "path": "packages/common" },
+    { "path": "apps/auth-service" },
+    { "path": "apps/seat-service" },
+    { "path": "apps/payment-service" },
+    { "path": "apps/payment-worker" },
+    { "path": "apps/gateway" }
+  ]
+}

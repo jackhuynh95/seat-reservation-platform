@@ -55,6 +55,125 @@ services:
     networks:
       - seat_reservation_network
 
+  gateway:
+    build:
+      context: .
+      dockerfile: apps/gateway/Dockerfile
+    container_name: seat-reservation-gateway
+    env_file: .env.example
+    environment:
+      GATEWAY_PORT: 3000
+      AUTH_SERVICE_URL: http://auth-service:3001
+      SEAT_SERVICE_URL: http://seat-service:3002
+      PAYMENT_SERVICE_URL: http://payment-service:3003
+    ports:
+      - "3000:3000"
+    depends_on:
+      auth-service:
+        condition: service_started
+      seat-service:
+        condition: service_started
+      payment-service:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - seat_reservation_network
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: apps/auth-service/Dockerfile
+    container_name: seat-reservation-auth
+    env_file: .env.example
+    environment:
+      AUTH_SERVICE_PORT: 3001
+      DB_HOST: postgres
+      RABBITMQ_URL: amqp://seat_reservation:seat_reservation@rabbitmq:5672
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - seat_reservation_network
+
+  seat-service:
+    build:
+      context: .
+      dockerfile: apps/seat-service/Dockerfile
+    container_name: seat-reservation-seat
+    env_file: .env.example
+    environment:
+      SEAT_SERVICE_PORT: 3002
+      DB_HOST: postgres
+      RABBITMQ_URL: amqp://seat_reservation:seat_reservation@rabbitmq:5672
+    ports:
+      - "3002:3002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - seat_reservation_network
+
+  payment-service:
+    build:
+      context: .
+      dockerfile: apps/payment-service/Dockerfile
+    container_name: seat-reservation-payment
+    env_file: .env.example
+    environment:
+      PAYMENT_SERVICE_PORT: 3003
+      DB_HOST: postgres
+      RABBITMQ_URL: amqp://seat_reservation:seat_reservation@rabbitmq:5672
+    ports:
+      - "3003:3003"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - seat_reservation_network
+
+  payment-worker:
+    build:
+      context: .
+      dockerfile: apps/payment-worker/Dockerfile
+    container_name: seat-reservation-worker
+    env_file: .env.example
+    environment:
+      PAYMENT_WORKER_PORT: 3004
+      SEAT_SERVICE_URL: http://seat-service:3002
+      RABBITMQ_URL: amqp://seat_reservation:seat_reservation@rabbitmq:5672
+    ports:
+      - "3004:3004"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      seat-service:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - seat_reservation_network
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: seat-reservation-web
+    environment:
+      VITE_API_URL: http://localhost:3000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - gateway
+    restart: unless-stopped
+    networks:
+      - seat_reservation_network
+
 volumes:
   postgres_data:
   rabbitmq_data:
