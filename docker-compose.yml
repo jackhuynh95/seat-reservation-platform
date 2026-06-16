@@ -1,60 +1,65 @@
 services:
-  server:
-    build:
-      context: .
-      dockerfile: apps/server/Dockerfile
-    container_name: location-booking-server
-    environment:
-      PORT: 3000
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USERNAME: location_booking
-      DB_PASSWORD: location_booking
-      DB_DATABASE: location_booking
-      DB_SSL: "false"
-      DB_SYNCHRONIZE: "true"
-      DB_LOGGING: "false"
-    ports:
-      - "3000:3000"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "node -e \"fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\"",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-    networks:
-      - location_booking_network
-
   postgres:
     image: postgres:16-alpine
-    container_name: location-booking-postgres
+    container_name: seat-reservation-postgres
     environment:
-      POSTGRES_USER: location_booking
-      POSTGRES_PASSWORD: location_booking
-      POSTGRES_DB: location_booking
+      POSTGRES_USER: seat_reservation
+      POSTGRES_PASSWORD: seat_reservation
+      POSTGRES_DB: seat_reservation
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U location_booking -d location_booking"]
+      test: ["CMD-SHELL", "pg_isready -U seat_reservation -d seat_reservation"]
       interval: 10s
       timeout: 5s
       retries: 5
     restart: unless-stopped
     networks:
-      - location_booking_network
+      - seat_reservation_network
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: seat-reservation-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: seat_reservation
+      RABBITMQ_DEFAULT_PASS: seat_reservation
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - seat_reservation_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: seat-reservation-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - seat_reservation_network
 
 volumes:
   postgres_data:
+  rabbitmq_data:
+  redis_data:
 
 networks:
-  location_booking_network:
-    name: location-booking-network
+  seat_reservation_network:
+    name: seat-reservation-network
